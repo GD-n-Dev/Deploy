@@ -1,0 +1,19 @@
+{
+  "name": "deploy",
+  "version": "1.0.0",
+  "description": "Deploy is a tool that helps out an IIS Server deployment by replacing directories and files where the server runs on and moves the old items into a backup folder with Date",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "tauri": "tauri"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.9",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.12"
+  }
+}
