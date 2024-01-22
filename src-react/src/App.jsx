@@ -1,20 +1,18 @@
-import React from 'react';
-import { open } from '@tauri-apps/api/dialog';
+import React, { useEffect, useState } from 'react';
+import { invoke } from '@tauri-apps/api';
+
+const checkIsGitInstalled = async () => await invoke('check_git_installed');
 
 const App = () => {
-  const clickHandler = async () => {
-    const selectedFiles = await open({
-      title: 'Select your file',
-    });
+  const [isGitInstalled, setIsGitInstalled] = useState(false);
 
-    console.log(selectedFiles);
-  };
+  useEffect(() => {
+    const installed = checkIsGitInstalled();
 
-  return (
-    <>
-      <button onClick={clickHandler}>select files</button>
-    </>
-  );
+    installed.then((res) => setIsGitInstalled(res)).catch((err) => console.log(err));
+  }, []);
+
+  return <>{isGitInstalled ? <h1>App</h1> : <h2>No App</h2>}</>;
 };
 
 export default App;
