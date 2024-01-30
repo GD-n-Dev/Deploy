@@ -4,19 +4,18 @@
 use std::process::Command;
 use std::process::Stdio;
 
+// For Opening File Dialogs and Invoke
+use rfd::AsyncFileDialog;
+
 // For exchange_code_for_token
 use tauri::{command, App, Manager, Window, State};
 use reqwest::Client;
 use serde::Deserialize;
 
 // For reading config file
-use serde::Serialize;
 use std::fs;
-use std::io;
-use std::path::PathBuf;
-use std::io::{Read};
+use std::io::Read;
 use std::env;
-use std::path::Path;
 
 struct AuthClient {
     client: Client,
@@ -27,6 +26,15 @@ struct AuthCode {
     code: String,
 }
 
+#[tauri::command]
+async fn open_file_dialog() -> Result<Vec<u8>, String> {
+    let path = AsyncFileDialog::new()
+    .set_directory("/")
+    .pick_folder()
+    .await;
+    let result = path.unwrap().read().await;
+    Ok(result)
+}
 
 #[tauri::command]
 async fn exchange_code_for_token(auth_client: State<'_, AuthClient>, auth_code: AuthCode) -> Result<String, String> {
@@ -63,30 +71,30 @@ fn check_git_installed() -> bool {
     }
 }
 
-// #[derive(Debug, Serialize)]
-// struct CustomError {
-//     message: String,
-// }
+ /* #[derive(Debug, Serialize)]
+ struct CustomError {
+     message: String,
+ }
 
-// impl From<std::io::Error> for CustomError {
-//     fn from(error: std::io::Error) -> Self {
-//         CustomError {
-//             message: error.to_string(),
-//         }
-//     }
-// }
+ impl From<std::io::Error> for CustomError {
+     fn from(error: std::io::Error) -> Self {
+         CustomError {
+             message: error.to_string(),
+         }
+     }
+ }
 
-// #[command]
-// async fn get_config() -> Result<String, CustomError> {
-//     let mut path = env::current_dir()?;
-//     path.push("../config/test.json");
+ #[command]
+ async fn get_config() -> Result<String, CustomError> {
+     let mut path = env::current_dir()?;
+     path.push("../config/test.json");
 
-//     let mut file = fs::File::open(path)?;
-//     let mut contents = String::new();
-//     file.read_to_string(&mut contents)?;
+     let mut file = fs::File::open(path)?;
+     let mut contents = String::new();
+     file.read_to_string(&mut contents)?;
     
-//     Ok(contents)
-// }
+     Ok(contents)
+ } */
 
 #[derive(Debug, serde::Serialize)]
 struct CustomError {
@@ -122,7 +130,8 @@ fn main() {
         client: Client::new(),
     })
     .invoke_handler(tauri::generate_handler![exchange_code_for_token,
-         get_config
+         get_config,
+         open_file_dialog,
          ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

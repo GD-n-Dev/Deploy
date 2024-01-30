@@ -5,6 +5,15 @@ const BITBUCKET_OAUTH_URL = 'https://bitbucket.org/site/oauth2/authorize';
 const CLIENT_ID = 'id';
 const REDIRECT_URI = 'redirecturi';
 
+const openFileDialog = async () => {
+    try {
+        const path = await invoke('open_file_dialog');
+        console.log(path);
+    } catch (error) {
+        console.error('Error: ', error);
+    }
+}
+
 const sendCodeToBackend = async (code) => {
   try {
     const data = await invoke('exchange_code_for_token', { authCode: { code } });
@@ -40,7 +49,7 @@ const App = () => {
   };
 
   const handleClickGetConfig = () => {
-    const config = getConfig();
+      getConfig();
   };
 
   console.log(config);
@@ -49,6 +58,7 @@ const App = () => {
     <>
       <button onClick={handleClick}>Click me</button>
       <button onClick={handleClickGetConfig}>GetConfig</button>
+      <button onClick={() => {openFileDialog()}}>OpenFileDialog</button>
     </>
   );
 };
