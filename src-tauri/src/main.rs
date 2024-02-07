@@ -1,22 +1,20 @@
+#![allow(unused_imports)]
+#![allow(unused_variables)]
+
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-// For check_git_installed
+
 use std::process::Command;
 use std::process::Stdio;
 
-// For exchange_code_for_token
 use tauri::{command, App, Manager, Window, State};
 use reqwest::Client;
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 
-// For reading config file
-use serde::Serialize;
 use std::fs;
-use std::io;
-use std::path::PathBuf;
-use std::io::{Read};
+use std::io::{self, Read};
+use std::path::{Path, PathBuf};
 use std::env;
-use std::path::Path;
 
 struct AuthClient {
     client: Client,
@@ -28,6 +26,22 @@ struct AuthCode {
 }
 
 
+fn main() {
+    tauri::Builder::default()
+    .manage(AuthClient {
+        client: Client::new(),
+    })
+    .invoke_handler(tauri::generate_handler![exchange_code_for_token,
+         get_config,
+         check_git_installed
+         ])
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
+}
+
+// need to update this with the new token api
+// create another test one with github if working from home for testing purposes
+// both should work similar enough to use both bitbucket and github.
 #[tauri::command]
 async fn exchange_code_for_token(auth_client: State<'_, AuthClient>, auth_code: AuthCode) -> Result<String, String> {
     let response = auth_client.client.post("https://bitbucket.org/site/oauth2/access_token")
@@ -58,7 +72,7 @@ fn check_git_installed() -> bool {
         .stdout(Stdio::piped())
         .output() 
     {
-        Ok(output) => output.status.success(),
+        Ok(_) => true,
         Err(_) => false,
     }
 }
@@ -116,14 +130,3 @@ async fn get_config() -> Result<String, CustomError> {
 }
 
 
-fn main() {
-    tauri::Builder::default()
-    .manage(AuthClient {
-        client: Client::new(),
-    })
-    .invoke_handler(tauri::generate_handler![exchange_code_for_token,
-         get_config
-         ])
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
-}

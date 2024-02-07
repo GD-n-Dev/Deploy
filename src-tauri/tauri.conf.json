@@ -61,10 +61,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "width": 1000,
+        "height": 800,
         "resizable": true,
-        "title": "Deploy",
-        "width": 800
+        "title": "Deploy"
       }
     ]
   }
