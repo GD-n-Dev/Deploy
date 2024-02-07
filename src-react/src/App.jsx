@@ -1,54 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 
-const BITBUCKET_OAUTH_URL = 'https://bitbucket.org/site/oauth2/authorize';
-const CLIENT_ID = 'id';
-const REDIRECT_URI = 'redirecturi';
 
-const sendCodeToBackend = async (code) => {
-  try {
-    const data = await invoke('exchange_code_for_token', { authCode: { code } });
-    console.log(data);
-  } catch (error) {
-    console.error('Error exchanging code for token', error);
-  }
-};
 
 const App = () => {
   const [config, setConfig] = useState({});
+  const [gitStatus, setGitStatus] = useState("");
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+  useEffect(() => {checkGit()}, [])
 
-    if (code) {
-      sendCodeToBackend(code).catch((err) => console.error(err));
-    }
-  }, [window.location.href]);
-
-  useEffect(() => {
-    getConfig();
-  }, []);
-
-  const handleClick = () => {
-    window.location.href = `${BITBUCKET_OAUTH_URL}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}`;
+  const gitPull = async () => {
+    invoke('git_pull')
+      .then((res) => {
+        const result = res;
+        console.log('result: ', result);
+      }).catch((err) => console.error(err));
   };
-
   const getConfig = async () => {
-    const config = await invoke('get_config');
-    setConfig(JSON.parse(config));
+    invoke('get_config')
+      .then((res) => {
+        const result = JSON.parse(res);
+        console.log("result: ", result);
+        setConfig(result);
+      }).catch((err) => console.error(err))
   };
 
-  const handleClickGetConfig = () => {
-    const config = getConfig();
+  const checkGit = async () => {
+    invoke('check_git_installed')
+      .then((res) => {
+        const result = res;
+        console.log("git result: ", result);
+        setGitStatus(result);
+      }).catch((err) => console.error(err))
   };
 
-  console.log(config);
+
+  console.log('config: ', config);
 
   return (
     <>
-      <button onClick={handleClick}>Click me</button>
-      <button onClick={handleClickGetConfig}>GetConfig</button>
+      <button onClick={() => gitPull()} style={{ margin: '25px' }}>git pull</button>
+      <button onClick={() => getConfig()} style={{ margin: '25px' }}>get config</button>
+      <button onClick={() => checkGit()} style={{ margin: '25px' }}>Check Git Version</button>
+      <p>{gitStatus}</p>
     </>
   );
 };

@@ -13,6 +13,6 @@ export default defineConfig({
         port: 3000,
         strictPort: true,
         host: true,
-        open: false 
+        open: false,
     }
 })
