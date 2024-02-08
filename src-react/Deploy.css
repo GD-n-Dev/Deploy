@@ -1,0 +1,38 @@
+* {
+  color: white;
+}
+
+body {
+  margin:10px;
+  background-color: #101010;
+}
+
+button {
+  margin: 10px;
+  background-color: #fafafa;
+  border: none;
+  border-radius: 3px;
+  color: black;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+p {
+  margin: 10px;
+}
+
+.button {
+  transition-duration: 200ms;
+
+}
+
+.button:active {
+  transform: scale(0.95);
+}
+
+.button:hover {
+  background-color: #808080;
+}
