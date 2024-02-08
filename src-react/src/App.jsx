@@ -8,7 +8,6 @@ const App = () => {
     <>
       <button className='button' onClick={() => {}}>Deploy</button>
       <button className='button' onClick={() => {}}>Revert to stable version</button>
-      <p>{gitStatus}</p>
     </>
   );
 };
