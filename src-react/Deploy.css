@@ -1,15 +1,18 @@
-* {
-  color: white;
+html {
+  height: 100%;
+  width: 100%;
 }
 
 body {
-  margin:10px;
+  margin: 0px;
   background-color: #101010;
+  height: 100%;
+  width: 100%;
 }
 
 button {
   margin: 10px;
-  background-color: #fafafa;
+  background-color: #ffffff;
   border: none;
   border-radius: 3px;
   color: black;
@@ -20,8 +23,28 @@ button {
   font-size: 16px;
 }
 
+input {
+  color: white;
+  padding: 9px;
+  margin: 10px;
+  min-width: 400px;
+  background-color: #101010;
+  border: line;
+  border-color: #ffffff;
+  border-radius: 3px;
+  text-align: left;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
 p {
   margin: 10px;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
 }
 
 .button {
@@ -34,5 +57,5 @@ p {
 }
 
 .button:hover {
-  background-color: #808080;
+  background-color: #888888;
 }

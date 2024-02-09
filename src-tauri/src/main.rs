@@ -20,47 +20,22 @@ use std::env;
 fn main() {
     tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
-         git_pull,
          get_config,
-         check_git_installed,
+         deploy_main,
          ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
 
 
-// need to update this with the new token api
-// create another test one with github if working from home for testing purposes
-// both should work similar enough to use both bitbucket and github.
 #[tauri::command]
-async fn git_pull() -> Result<String, String> {
-    let output = std::process::Command::new("git")
-        .arg("pull")
-        .output()
-        .map_err(|e| format!("Failed to execute command: {}", e))?;
-
-    if output.status.success() {
-        Ok("Git pull successful".to_string())
-    } else {
-        Err(format!("Error during git pull: {}", String::from_utf8_lossy(&output.stderr)))
-    }
-}
-
-
-#[tauri::command] // Mark this function as a Tauri command
-fn check_git_installed() -> Result<String, String> {
-    match Command::new("git").arg("--version").output() {
-        Ok(res) => Ok(String::from_utf8_lossy(&res.stdout).to_string()),
-        Err(err) => Err(err.to_string()),
-    }
-}
-
-#[tauri::command] // Mark this function as a tauri command
 fn get_config() -> String {
-   
-   // let raw_json: String = fs::read_to_string().unwrap();
-   // println!("path was passed: {}", path);
-   // println!("raw_json: {}", raw_json);
-   // raw_json
-   String::from("test")
+   let raw_json: String = fs::read_to_string("../Deploy.json").unwrap();
+   println!("raw_json: {}", raw_json);
+   raw_json
+}
+
+#[tauri::command] // Tauri Command
+fn deploy_main(deploy_path: String) {
+    
 }
