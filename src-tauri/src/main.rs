@@ -20,6 +20,7 @@ fn main() {
     tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
          get_config,
+         get_status,
          deploy_main,
          ])
     .run(tauri::generate_context!())
@@ -29,15 +30,16 @@ fn main() {
 
 #[tauri::command]
 fn get_config() -> String {
-   let raw_json: String = fs::read_to_string("../Deploy.json").unwrap();
-   println!("raw_json: {}", raw_json);
-   raw_json
+    let user_path = Command::new("cmd").arg("echo %USERPROFILE%").output().expect("Failed to execute Process");
+    println!("user_path: {:?}", user_path);
+    let raw_json = "test".to_string();
+    raw_json
 }
 
 #[tauri::command]
 fn get_status() -> String {
-    match Command::new("git")
-        .arg("pull")
+    match Command::new("cmd")
+        .args(["git", "pull"])
         .output()
         {
             Ok(output) => String::from_utf8_lossy(&output.stdout).to_string(),
