@@ -4,10 +4,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::process::{Command, Stdio};
+use std::process::Command;
 
 use std::{fs, env};
-use std::io::{self, Read, Write};
+use std::io::{self, Read, Stdout, Write};
 use std::path::{Path, PathBuf};
 
 use serde_json::Value;
@@ -38,13 +38,19 @@ fn get_config() -> String {
 
 #[tauri::command]
 fn get_status() -> String {
-    match Command::new("cmd")
-        .args(["git", "pull"])
-        .output()
-        {
-            Ok(output) => String::from_utf8_lossy(&output.stdout).to_string(),
-            Err(err) => err.to_string(),
-        }
+    let mut cmd = Command::new("git");
+    cmd.args(["pull"]);
+    cmd.current_dir("C:\\Users\\Jonathan Lister\\jlister\\Github_Projects\\Deploy\\");
+
+    let output = cmd.output().expect("Failed to execute Command");
+
+    if output.status.success() {
+        println!("Output: {}", String::from_utf8_lossy(&output.stdout));
+        String::from_utf8_lossy(&output.stdout).to_string()
+    } else {
+        println!("Command Failed with error: {}", String::from_utf8_lossy(&output.stderr));
+        String::from_utf8_lossy(&output.stderr).to_string()
+    }
 }
 
 #[tauri::command]
