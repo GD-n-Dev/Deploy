@@ -1,37 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/tauri';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { useConfig, useStatus } from './customHooks';
 
 const App = () => {
-  const [status, setStatus] = useState('');
-  const [config, setConfig] = useState('');
-
-  const getConfig = async () => {
-    invoke('get_config').then((res) => {
-      setConfig(JSON.parse(res))
-      console.log("Get Config: ", JSON.parse(res).Version);
-    }).catch((err) => console.error(err));
-  }
-
-  const getStatus = async () => {
-    invoke('get_status').then((res) => {
-      setStatus(res);
-      console.log("Get Status: ", res)
-    }).catch((err) => console.error(err));
-  }
-
-  useEffect(() => {
-    getConfig();
-    getStatus();
-  }, []);
+  const configHook = useConfig();
+  const statusHook = useStatus();
 
   return (
     <>
       <div style={{ height: '100%', display: 'flex', placeContent: 'center', flexDirection: 'column', alignItems: 'center' }}> 
         <div>
-          <p>{status} - Git Status</p>
+          <p>{statusHook.value} - Git Status</p>
         </div>
         <div>
           <button className='button' onClick={() => {
@@ -42,7 +22,7 @@ const App = () => {
           }}>Revert to stable version</button>
         </div>
         <div>
-          <p>{config.Version} - config file</p>
+          <p>{configHook.value.Version} - Configuration</p>
         </div>
       </div>
       <ToastContainer theme="dark"/>

@@ -5,6 +5,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::process::Command;
+use std::collections::HashMap;
 
 use std::{fs, env};
 use std::io::{self, Read, Stdout, Write};
@@ -30,25 +31,25 @@ fn main() {
 
 #[tauri::command]
 fn get_config() -> String {
-    let user_path = Command::new("cmd").arg("echo %USERPROFILE%").output().expect("Failed to execute Process");
-    println!("user_path: {:?}", user_path);
-    let raw_json = "test".to_string();
-    raw_json
+    let cmd = Command::new("cmd")
+        .arg("echo")
+        .arg("test");
+    let result = cmd.output();
 }
 
 #[tauri::command]
 fn get_status() -> String {
     let mut cmd = Command::new("git");
-    cmd.args(["pull"]);
     cmd.current_dir("C:\\Users\\Jonathan Lister\\jlister\\Github_Projects\\Deploy\\");
+    cmd.args(["pull"]);
 
     let output = cmd.output().expect("Failed to execute Command");
 
     if output.status.success() {
-        println!("Output: {}", String::from_utf8_lossy(&output.stdout));
+        //println!("Output: {}", String::from_utf8_lossy(&output.stdout));
         String::from_utf8_lossy(&output.stdout).to_string()
     } else {
-        println!("Command Failed with error: {}", String::from_utf8_lossy(&output.stderr));
+        //println!("Command Failed with error: {}", String::from_utf8_lossy(&output.stderr));
         String::from_utf8_lossy(&output.stderr).to_string()
     }
 }
