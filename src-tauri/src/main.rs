@@ -31,10 +31,11 @@ fn main() {
 
 #[tauri::command]
 fn get_config() -> String {
-    let cmd = Command::new("cmd")
-        .arg("echo")
-        .arg("test");
+    let mut cmd = Command::new("cmd");
+    cmd.arg("echo");
+    cmd.arg("test");
     let result = cmd.output();
+    String::from("test")
 }
 
 #[tauri::command]
@@ -56,7 +57,7 @@ fn get_status() -> String {
 
 #[tauri::command]
 fn deploy_main() {
-    let config: String = get_config();
+    //let config: String = get_config();
     // Get config value to get live SEER path
     // Get config value backup SEER path
     // Backup SEER and create new folder with date and version
