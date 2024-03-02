@@ -25,9 +25,9 @@ export const useStatus = () => {
 }
 
 const getConfig = async (setter) => {
-  invoke('get_config').then((res) => {
-    setter(JSON.parse(res))
-    console.log("Get Config: ", JSON.parse(res).Version);
+  invoke('get_directory').then((res) => {
+    setter(res)
+    console.log("Get Config: ", res);
   }).catch((err) => console.error(err));
 }
 

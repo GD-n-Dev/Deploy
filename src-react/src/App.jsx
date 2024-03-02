@@ -1,11 +1,14 @@
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import { useConfig, useStatus } from './customHooks';
 
 const App = () => {
   const configHook = useConfig();
   const statusHook = useStatus();
+
+//  localStorage.setItem("config", statusHook.value);
+//  const theme = localStorage.getItem("config");
+//  console.log("theme value: ",theme);
 
   return (
     <>
@@ -22,7 +25,7 @@ const App = () => {
           }}>Revert to stable version</button>
         </div>
         <div>
-          <p>{configHook.value.Version} - Configuration</p>
+          <p>{configHook.value} - Configuration</p>
         </div>
       </div>
       <ToastContainer theme="dark"/>

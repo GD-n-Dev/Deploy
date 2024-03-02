@@ -4,7 +4,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::process::Command;
+use std::process::{Command, Stdio};
 use std::collections::HashMap;
 
 use std::{fs, env};
@@ -20,7 +20,7 @@ use serde::{Serialize, Deserialize};
 fn main() {
     tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
-         get_config,
+         get_directory,
          get_status,
          deploy_main,
          ])
@@ -28,15 +28,16 @@ fn main() {
     .expect("error while running tauri application");
 }
 
-
 #[tauri::command]
-fn get_config() -> String {
-    let mut cmd = Command::new("cmd");
-    cmd.arg("echo");
-    cmd.arg("test");
-    let result = cmd.output();
-    String::from("test")
+fn get_directory() -> String {
+    let cmd = Command::new("Powershell")
+        .args(["/C", "PWD", "|", "% { $_.Path }"])
+        .output()
+        .unwrap();
+    println!("test: {}", String::from_utf8_lossy(&cmd.stdout).to_string());
+    String::from_utf8_lossy(&cmd.stdout).to_string()
 }
+
 
 #[tauri::command]
 fn get_status() -> String {
@@ -57,7 +58,6 @@ fn get_status() -> String {
 
 #[tauri::command]
 fn deploy_main() {
-    //let config: String = get_config();
     // Get config value to get live SEER path
     // Get config value backup SEER path
     // Backup SEER and create new folder with date and version
