@@ -1,10 +1,13 @@
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useConfig, useStatus } from './customHooks';
+import { useConfig, useStatus, useBackup } from './customHooks';
+import { invoke } from '@tauri-apps/api';
 
 const App = () => {
   const configHook = useConfig();
   const statusHook = useStatus();
+  const backupHook = useBackup();
+
 
 //  localStorage.setItem("config", statusHook.value);
 //  const theme = localStorage.getItem("config");
@@ -26,6 +29,21 @@ const App = () => {
         </div>
         <div>
           <p>{configHook.value} - Configuration</p>
+        </div>
+        <div>
+          <input type='text' placeholder='Source Path' />
+          <button className='button' onClick={() => {
+            invoke('open_dialog').then((res) => console.log(res)).catch((err) => console.error(err));
+          }}>Browse</button>
+        </div>
+        <div>
+          <input type='text' placeholder='Target Path' />
+          <button className='button' onClick={() => {
+            invoke('open_dialog').then((res) => console.log(res)).catch((err) => console.error(err));
+          }}>Browse</button>
+        </div>
+        <div>
+          <p>{backupHook.value} - backup</p>
         </div>
       </div>
       <ToastContainer theme="dark"/>

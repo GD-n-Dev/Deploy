@@ -28,7 +28,7 @@ input {
   padding: 9px;
   margin: 10px;
   min-width: 400px;
-  background-color: #101010;
+  background-color: #122112;
   border: line;
   border-color: #ffffff;
   border-radius: 3px;
@@ -36,6 +36,11 @@ input {
   text-decoration: none;
   display: inline-block;
   font-size: 12px;
+}
+
+::placeholder{
+  color: #0099ff;
+  opacity: 1;
 }
 
 p {

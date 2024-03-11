@@ -61,8 +61,8 @@
     "windows": [
       {
         "fullscreen": false,
-        "width": 1000,
-        "height": 800,
+        "width": 800,
+        "height": 600,
         "resizable": true,
         "title": "Deploy"
       }
